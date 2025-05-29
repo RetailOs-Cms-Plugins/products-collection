@@ -1,5 +1,5 @@
 import { Tab } from 'payload'
-import type { ProductsCollectionConfig } from '../../../types'
+import type { ProductsCollectionConfig } from '../../../types.js'
 
 export const createGeneralTab = (options?: ProductsCollectionConfig): Tab => {
   const { enableCategoryField = true, enableProductTypeField = true } = options || {}
@@ -40,7 +40,7 @@ export const createGeneralTab = (options?: ProductsCollectionConfig): Tab => {
       name: 'category',
       label: 'Category',
       type: 'relationship',
-      relationTo: 'categories',
+      relationTo: 'categories' as any,
       hasMany: true,
     })
   }
@@ -50,7 +50,7 @@ export const createGeneralTab = (options?: ProductsCollectionConfig): Tab => {
       name: 'productType',
       label: 'Product Type',
       type: 'relationship',
-      relationTo: 'productsTypes',
+      relationTo: 'productsTypes' as any,
       hasMany: true,
     })
   }

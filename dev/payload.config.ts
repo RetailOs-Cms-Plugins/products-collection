@@ -1,14 +1,17 @@
-import { mongooseAdapter } from '@payloadcms/db-mongodb'
+import { postgresAdapter } from '@payloadcms/db-postgres'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import path from 'path'
 import { buildConfig } from 'payload'
-import { myPluginProducts } from 'my-plugin-products'
+import { productsCollection } from '../src/index.js'
 import sharp from 'sharp'
 import { fileURLToPath } from 'url'
 
 import { devUser } from './helpers/credentials.js'
 import { testEmailAdapter } from './helpers/testEmailAdapter.js'
 import { seed } from './seed.js'
+
+import dotenv from 'dotenv'
+dotenv.config()
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -37,20 +40,24 @@ export default buildConfig({
       },
     },
   ],
-  db: mongooseAdapter({
-    url: process.env.DATABASE_URI || '',
+
+  db: postgresAdapter({
+    pool: {
+      connectionString: process.env.DATABASE_URI || '',
+    },
   }),
+
   editor: lexicalEditor(),
   email: testEmailAdapter,
   onInit: async (payload) => {
     await seed(payload)
   },
   plugins: [
-    myPluginProducts({
+    productsCollection({
       collections: {
         posts: true,
       },
-    }),
+    } as any),
   ],
   secret: process.env.PAYLOAD_SECRET || 'test-secret_key',
   sharp,
