@@ -1,14 +1,13 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest'
-
-import dotenv from 'dotenv'
-dotenv.config()
-
 import { getPayload } from 'payload'
 import configPromise from '../dev/payload.config.js'
 import type { CollectionSlug } from 'payload'
+import dotenv from 'dotenv'
+dotenv.config()
 
 describe('Products Plugin E2E', () => {
   let localPayload: Awaited<ReturnType<typeof getPayload>>
+  let createdProduct: any
 
   beforeAll(async () => {
     process.env.PAYLOAD_CONFIG_PATH = new URL('../dev/payload.config.ts', import.meta.url).pathname
@@ -22,17 +21,56 @@ describe('Products Plugin E2E', () => {
   })
 
   it('should create a product', async () => {
-    const result = await localPayload.create({
+    createdProduct = await localPayload.create({
       collection: 'products' as CollectionSlug,
       data: {
         productName: 'Test Product',
       } as any,
     })
 
-    expect(result).toMatchObject({
+    expect(createdProduct).toMatchObject({
       productName: 'Test Product',
       id: expect.any(Number),
     })
+  })
+
+  it('should read the created product', async () => {
+    const { docs } = await localPayload.find({
+      collection: 'products' as CollectionSlug,
+      where: {
+        id: { equals: createdProduct.id },
+      },
+    })
+
+    expect(docs[0]).toMatchObject({
+      productName: createdProduct.productName,
+    })
+  })
+
+  it('should update the product', async () => {
+    const updated = (await localPayload.update({
+      collection: 'products' as CollectionSlug,
+      id: createdProduct.id,
+      data: { productName: 'Updated Test Product' } as any,
+    })) as any
+
+    expect(updated.productName).toBe('Updated Test Product')
+  })
+
+  it('should delete the products', async () => {
+    await localPayload.delete({
+      collection: 'products' as CollectionSlug,
+      id: createdProduct.id,
+    })
+
+    const { docs } = await localPayload.find({
+      collection: 'products' as CollectionSlug,
+      where: {
+        id: { equals: createdProduct.id },
+      },
+    })
+
+    expect(docs.length).toBe(0)
   })
 
   afterAll(async () => {
