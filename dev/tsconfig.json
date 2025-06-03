@@ -31,5 +31,17 @@
     },
     "noEmit": true,
     "emitDeclarationOnly": false,
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "incremental": true,
+    "jsx": "preserve",
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   }
 }

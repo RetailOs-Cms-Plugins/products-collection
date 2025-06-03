@@ -73,6 +73,19 @@ describe('Products Plugin E2E', () => {
     expect(docs.length).toBe(0)
   })
 
+  it('should fail to create a product without required field', async () => {
+    try {
+      await localPayload.create({
+        collection: 'products' as CollectionSlug,
+        data: {} as any,
+      })
+
+      expect(false).toBe(true) // test failed as it should catch error.
+    } catch (err: any) {
+      expect(err.status).toBe(400)
+    }
+  })
+
   afterAll(async () => {
     await localPayload.delete({
       collection: 'products' as CollectionSlug,
