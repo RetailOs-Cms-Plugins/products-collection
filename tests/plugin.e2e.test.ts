@@ -8,6 +8,7 @@ dotenv.config()
 describe('Products Plugin E2E', () => {
   let localPayload: Awaited<ReturnType<typeof getPayload>>
   let createdProduct: any
+  const createdProductIds: string[] = []
 
   beforeAll(async () => {
     process.env.PAYLOAD_CONFIG_PATH = new URL('../dev/payload.config.ts', import.meta.url).pathname
@@ -27,6 +28,7 @@ describe('Products Plugin E2E', () => {
         productName: 'Test Product',
       } as any,
     })
+    createdProductIds.push(createdProduct.id)
 
     expect(createdProduct).toMatchObject({
       productName: 'Test Product',
@@ -75,10 +77,11 @@ describe('Products Plugin E2E', () => {
 
   it('should fail to create a product without required field', async () => {
     try {
-      await localPayload.create({
+      const corruptedProduct = await localPayload.create({
         collection: 'products' as CollectionSlug,
         data: {} as any,
       })
+      createdProductIds.push(corruptedProduct.id)
 
       expect(false).toBe(true) // test failed as it should catch error.
     } catch (err: any) {
@@ -87,20 +90,19 @@ describe('Products Plugin E2E', () => {
   })
 
   afterAll(async () => {
-    await localPayload.delete({
-      collection: 'products' as CollectionSlug,
-      where: {
-        productName: {
-          equals: 'Test Product',
-        },
-      },
-    })
+    await Promise.all(
+      createdProductIds.map(async (id) => {
+        try {
+          await localPayload.delete({
+            collection: 'products' as CollectionSlug,
+            id,
+          })
+        } catch (err: any) {
+          if (err.message?.includes('Not Found'))
+            console.warn(`Product with id ${id} already deleted.`) // not a real error
+          else throw err // a true error - stop the test
+        }
+      }),
+    )
   })
 })
-
-/*
-describe('Sanity test', () => {
-  it('should pass basic truthy check', () => {
-    expect(true).toBe(true)
-  })
-})*/
