@@ -22,7 +22,7 @@ export const reviewsTab: Tab = {
             value: (i + 1).toString(),
           })),
           hooks: {
-            beforeChange: [({ value }) => Number(value)], // save to DB as num and not string
+            beforeChange: [({ value }) => Number(value)],
           },
         },
         { name: 'review', type: 'richText' },

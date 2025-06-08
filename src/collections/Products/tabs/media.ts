@@ -60,9 +60,9 @@ export const mediaTab: Tab = {
               label: 'Type',
               type: 'select',
               options: [
-                { label: 'URL', value: 'text' }, // show text filed
-                { label: 'UPLOAD', value: 'media' }, // show upload filed
-                { label: 'IFRAME', value: 'code' }, // show code filed
+                { label: 'URL', value: 'text' },
+                { label: 'UPLOAD', value: 'media' },
+                { label: 'IFRAME', value: 'code' },
               ],
               admin: { width: 10 },
             },

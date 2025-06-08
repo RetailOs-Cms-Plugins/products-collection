@@ -22,13 +22,13 @@ export const createProductsCollection = (
     {
       type: 'tabs',
       tabs: [
-        createGeneralTab(pluginOptions), // General Information
-        mediaTab, // Images and Media
-        specificationsTab, // Technical Specifications
-        seoTab, // SEO
-        featuresTab, // Options and Features
-        termsTab, // Terms and Conditions
-        reviewsTab, // Reviews and Ratings
+        createGeneralTab(pluginOptions),
+        mediaTab,
+        specificationsTab,
+        seoTab,
+        featuresTab,
+        termsTab,
+        reviewsTab,
       ],
     },
   ],
