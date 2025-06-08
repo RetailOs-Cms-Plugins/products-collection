@@ -19,7 +19,7 @@ export const productsCollection =
             update: () => false,
             delete: () => false,
             read: () => false,
-          },
+          }, // ffdgfd
         }
       : createProductsCollection(pluginOptions)
 
