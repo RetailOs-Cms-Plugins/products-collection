@@ -1,6 +1,6 @@
 import { Field, Tab } from 'payload'
 
-const getAltCaptionRow = (): Field => ({
+const createAltCaptionRow = (): Field => ({
   type: 'row',
   fields: [
     { name: 'alt', label: 'Alt Text', type: 'text' },
@@ -8,13 +8,13 @@ const getAltCaptionRow = (): Field => ({
   ],
 })
 
-const getImageFields = (): Field[] => [
+const createImageFields = (): Field[] => [
   {
     name: 'image',
     type: 'upload',
     relationTo: 'media',
   },
-  getAltCaptionRow(),
+  createAltCaptionRow(),
 ]
 
 export const mediaTab: Tab = {
@@ -23,7 +23,7 @@ export const mediaTab: Tab = {
     {
       name: 'mainImage',
       type: 'group',
-      fields: getImageFields(),
+      fields: createImageFields(),
     },
     {
       name: 'imagesGallery',
@@ -32,7 +32,7 @@ export const mediaTab: Tab = {
         plural: 'images',
       },
       type: 'array',
-      fields: getImageFields(),
+      fields: createImageFields(),
     },
     {
       name: 'icons',
@@ -93,7 +93,7 @@ export const mediaTab: Tab = {
           ],
         },
 
-        getAltCaptionRow(),
+        createAltCaptionRow(),
       ],
     },
   ],

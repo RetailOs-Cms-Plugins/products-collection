@@ -2,10 +2,14 @@ import { Tab } from 'payload'
 import type { ProductsCollectionConfig } from '../../../types.js'
 
 export const createGeneralTab = (options?: ProductsCollectionConfig): Tab => {
-  const { enableCategoryField = true, enableProductTypeField = true } = options || {}
+  const { enableCategoryField, enableProductTypeField } = {
+    enableCategoryField: true,
+    enableProductTypeField: true,
+    ...options,
+  }
 
   const fields: Tab['fields'] = [
-    { name: 'productName', label: 'Product Name', type: 'text', required: true },
+    { name: 'name', label: 'Name', type: 'text', required: true },
     { name: 'description', label: 'Description', type: 'textarea' },
     { name: 'content', label: 'Content', type: 'richText' },
     {

@@ -79,14 +79,14 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"id" varchar PRIMARY KEY NOT NULL,
   	"customer" varchar,
   	"date" timestamp(3) with time zone,
-  	"rating" "enum_products_reviews_rating",
+  	"rating" "enum_products_reviews_rating" NOT NULL,
   	"review" jsonb,
   	"image_id" integer
   );
   
   CREATE TABLE IF NOT EXISTS "products" (
   	"id" serial PRIMARY KEY NOT NULL,
-  	"product_name" varchar NOT NULL,
+  	"name" varchar NOT NULL,
   	"description" varchar,
   	"content" jsonb,
   	"seasonal_expiry_date" timestamp(3) with time zone,
@@ -106,14 +106,6 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"keywords" varchar,
   	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
   	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
-  );
-  
-  CREATE TABLE IF NOT EXISTS "products_rels" (
-  	"id" serial PRIMARY KEY NOT NULL,
-  	"order" integer,
-  	"parent_id" integer NOT NULL,
-  	"path" varchar NOT NULL,
-  	"categories_id" integer
   );
   
   ALTER TABLE "payload_locked_documents_rels" ADD COLUMN "products_id" integer;
@@ -207,18 +199,6 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
    WHEN duplicate_object THEN null;
   END $$;
   
-  DO $$ BEGIN
-   ALTER TABLE "products_rels" ADD CONSTRAINT "products_rels_parent_fk" FOREIGN KEY ("parent_id") REFERENCES "public"."products"("id") ON DELETE cascade ON UPDATE no action;
-  EXCEPTION
-   WHEN duplicate_object THEN null;
-  END $$;
-  
-  DO $$ BEGIN
-   ALTER TABLE "products_rels" ADD CONSTRAINT "products_rels_categories_fk" FOREIGN KEY ("categories_id") REFERENCES "public"."categories"("id") ON DELETE cascade ON UPDATE no action;
-  EXCEPTION
-   WHEN duplicate_object THEN null;
-  END $$;
-  
   CREATE INDEX IF NOT EXISTS "products_tags_order_idx" ON "products_tags" USING btree ("_order");
   CREATE INDEX IF NOT EXISTS "products_tags_parent_id_idx" ON "products_tags" USING btree ("_parent_id");
   CREATE INDEX IF NOT EXISTS "products_images_gallery_order_idx" ON "products_images_gallery" USING btree ("_order");
@@ -245,10 +225,6 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE INDEX IF NOT EXISTS "products_main_image_main_image_image_idx" ON "products" USING btree ("main_image_image_id");
   CREATE INDEX IF NOT EXISTS "products_updated_at_idx" ON "products" USING btree ("updated_at");
   CREATE INDEX IF NOT EXISTS "products_created_at_idx" ON "products" USING btree ("created_at");
-  CREATE INDEX IF NOT EXISTS "products_rels_order_idx" ON "products_rels" USING btree ("order");
-  CREATE INDEX IF NOT EXISTS "products_rels_parent_idx" ON "products_rels" USING btree ("parent_id");
-  CREATE INDEX IF NOT EXISTS "products_rels_path_idx" ON "products_rels" USING btree ("path");
-  CREATE INDEX IF NOT EXISTS "products_rels_categories_id_idx" ON "products_rels" USING btree ("categories_id");
   DO $$ BEGIN
    ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_products_fk" FOREIGN KEY ("products_id") REFERENCES "public"."products"("id") ON DELETE cascade ON UPDATE no action;
   EXCEPTION
@@ -270,7 +246,6 @@ export async function down({ db, payload, req }: MigrateDownArgs): Promise<void>
   ALTER TABLE "products_terms" DISABLE ROW LEVEL SECURITY;
   ALTER TABLE "products_reviews" DISABLE ROW LEVEL SECURITY;
   ALTER TABLE "products" DISABLE ROW LEVEL SECURITY;
-  ALTER TABLE "products_rels" DISABLE ROW LEVEL SECURITY;
   DROP TABLE "products_tags" CASCADE;
   DROP TABLE "products_images_gallery" CASCADE;
   DROP TABLE "products_icons" CASCADE;
@@ -281,7 +256,6 @@ export async function down({ db, payload, req }: MigrateDownArgs): Promise<void>
   DROP TABLE "products_terms" CASCADE;
   DROP TABLE "products_reviews" CASCADE;
   DROP TABLE "products" CASCADE;
-  DROP TABLE "products_rels" CASCADE;
   ALTER TABLE "payload_locked_documents_rels" DROP CONSTRAINT "payload_locked_documents_rels_products_fk";
   
   DROP INDEX IF EXISTS "payload_locked_documents_rels_products_id_idx";

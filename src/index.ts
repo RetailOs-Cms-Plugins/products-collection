@@ -7,11 +7,13 @@ export const productsCollection =
   (config: Config): Config => {
     const collections = config.collections || []
 
+    const productCollection = createProductsCollection(pluginOptions)
+
     const pluginCollection = pluginOptions?.disabled
       ? {
-          ...createProductsCollection(pluginOptions),
+          ...productCollection,
           admin: {
-            ...createProductsCollection(pluginOptions).admin,
+            ...productCollection.admin,
             hidden: true,
           },
           access: {
@@ -21,7 +23,7 @@ export const productsCollection =
             read: () => false,
           },
         }
-      : createProductsCollection(pluginOptions)
+      : productCollection
 
     return {
       ...config,

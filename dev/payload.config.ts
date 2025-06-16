@@ -54,10 +54,10 @@ export default buildConfig({
   },
   plugins: [
     productsCollection({
-      collections: {
-        posts: true,
-      },
-    } as any),
+      disabled: false,
+      enableCategoryField: false,
+      enableProductTypeField: false,
+    }),
   ],
   secret: process.env.PAYLOAD_SECRET || 'test-secret_key',
   sharp,
