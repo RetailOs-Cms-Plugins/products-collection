@@ -16,7 +16,7 @@ export const createProductsCollection = (
 ): CollectionConfig => ({
   slug: 'products',
   admin: {
-    useAsTitle: 'productName',
+    useAsTitle: 'name',
   },
   fields: [
     {

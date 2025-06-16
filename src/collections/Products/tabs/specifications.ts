@@ -1,4 +1,3 @@
-import { group } from 'console'
 import { Tab } from 'payload'
 
 export const specificationsTab: Tab = {
@@ -14,7 +13,22 @@ export const specificationsTab: Tab = {
           type: 'row',
           fields: [
             { name: 'unit', type: 'text' },
-            { name: 'value', type: 'number' },
+            {
+              name: 'value',
+              type: 'number',
+              min: 0,
+              hooks: {
+                beforeValidate: [
+                  ({ value }) => {
+                    const numValue = Number(value)
+                    if (isNaN(numValue) || (value !== null && value < 0)) {
+                      throw new Error('Weight value must be positive')
+                    }
+                    return value
+                  },
+                ],
+              },
+            },
           ],
         },
       ],
