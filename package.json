@@ -1,6 +1,10 @@
 {
   "name": "cms-products-collection",
+<<<<<<< HEAD
   "version": "1.4.2",
+=======
+  "version": "1.3.4",
+>>>>>>> main
   "description": "A blank template to get started with Payload 3.0",
   "license": "MIT",
   "type": "module",
