@@ -16,29 +16,11 @@ export const productsCollection =
   (config: Config): Config => {
     const collections = config.collections || []
 
-    const productCollection = createProductsCollection(pluginOptions)
-
-    const pluginCollection = pluginOptions?.disabled
-      ? {
-          ...productCollection,
-          admin: {
-            ...productCollection.admin,
-            hidden: true,
-          },
-          access: {
-            create: () => false,
-            update: () => false,
-            delete: () => false,
-            read: () => false,
-          },
-        }
-      : productCollection
-
     return {
       ...config,
       collections: [
         ...collections,
-        pluginCollection,
+        createProductsCollection(pluginOptions),
         categoriesCollection,
         collectionsCollection,
         tagsCollection,

@@ -3,8 +3,16 @@ import { Tab } from 'payload'
 export const specificationsTab: Tab = {
   label: 'Specifications',
   fields: [
-    { name: 'material', label: 'Material', type: 'text' },
-    { name: 'dimensions', label: 'Dimensions', type: 'text' },
+    {
+      name: 'material',
+      label: 'Material',
+      type: 'text',
+    },
+    {
+      name: 'dimensions',
+      label: 'Dimensions',
+      type: 'text',
+    },
     {
       name: 'weight',
       type: 'group',
@@ -12,17 +20,21 @@ export const specificationsTab: Tab = {
         {
           type: 'row',
           fields: [
-            { name: 'unit', type: 'text' },
+            {
+              name: 'unit',
+              type: 'text',
+            },
             {
               name: 'value',
               type: 'number',
+              defaultValue: '0',
               min: 0,
               hooks: {
                 beforeValidate: [
                   ({ value }) => {
                     const numValue = Number(value)
                     if (isNaN(numValue) || (value !== null && value < 0)) {
-                      throw new Error('Weight value must be positive')
+                      throw new Error('Weight value must be non-negative')
                     }
                     return value
                   },
@@ -33,8 +45,10 @@ export const specificationsTab: Tab = {
         },
       ],
     },
-    { name: 'productCode', type: 'text' },
-    { name: 'modelNumber', type: 'text' },
+    {
+      name: 'productCode',
+      type: 'text',
+    },
     {
       name: 'spec',
       label: 'Table Spec',

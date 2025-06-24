@@ -55,8 +55,6 @@ export default buildConfig({
   plugins: [
     productsCollection({
       disabled: false,
-      enableCategoryField: false,
-      enableProductTypeField: false,
     }),
   ],
   secret: process.env.PAYLOAD_SECRET || 'test-secret_key',

@@ -23,6 +23,7 @@ export const reviewsTab: Tab = {
                 { label: '4', value: '4' },
                 { label: '5', value: '5' },
               ],
+              defaultValue: '5',
               hooks: {
                 beforeValidate: [
                   ({ value }) => {
